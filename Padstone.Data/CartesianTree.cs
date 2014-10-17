@@ -54,7 +54,7 @@ namespace Padstone.Data
                     }
                 }
 
-                if (this.Compare(current.Value, this.root.Value) < 0)
+                if (this.Compare(current.Value, this.root.Value) <= 0)
                 {
                     this.root = current;
                 }
