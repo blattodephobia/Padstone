@@ -9,6 +9,7 @@ namespace Padstone.Data
     public class CartesianTree<T> : IList<T>
     {
         private CartesianTreeNode<T> root;
+        private CartesianTreeNode<T> lastAddedNode;
 
         private static int IComparableResult(T x, T y)
         {
@@ -37,51 +38,54 @@ namespace Padstone.Data
             this.AddRange(collection);
         }
 
-        public void AddRange(IEnumerable<T> collection)
+        private void AddInternal(T item)
         {
-            CartesianTreeNode<T> current = null;
-            int currentIndex = this.Count - 1;
-            foreach (T item in collection)
+            int currentIndex = this.Count;
+            if (this.root == null)
             {
-                currentIndex++;
-                if (this.root == null)
-                {
-                    this.root = new CartesianTreeNode<T>() { Index = 0, Value = item };
-                    current = this.root;
-                    continue;
-                }
-
+                this.root = new CartesianTreeNode<T>() { Index = 0, Value = item };
+                this.lastAddedNode = this.root;
+                this.listInternal.Add(item);
+            }
+            else
+            {
                 if (this.Compare(root.Value, item) < 0)
                 {
-                    current.Right = new CartesianTreeNode<T>() { Index = currentIndex, Value = item, Parent = current };
-                    current = current.Right;
+                    this.lastAddedNode.Right = new CartesianTreeNode<T>() { Index = currentIndex, Value = item, Parent = this.lastAddedNode };
+                    this.lastAddedNode = this.lastAddedNode.Right;
                 }
                 else
                 {
-                    while (current.Parent != null && this.Compare(current.Parent.Value, item) >= 0)
+                    while (this.lastAddedNode.Parent != null && this.Compare(this.lastAddedNode.Parent.Value, item) >= 0)
                     {
-                        current = current.Parent;
+                        this.lastAddedNode = this.lastAddedNode.Parent;
                     }
-                    CartesianTreeNode<T> oldParent = current.Parent;
-                    current.Parent = new CartesianTreeNode<T>() { Index = currentIndex, Value = item, Left = current };
-                    current = current.Parent;
+                    CartesianTreeNode<T> oldParent = this.lastAddedNode.Parent;
+                    this.lastAddedNode.Parent = new CartesianTreeNode<T>() { Index = currentIndex, Value = item, Left = this.lastAddedNode };
+                    this.lastAddedNode = this.lastAddedNode.Parent;
                     if (oldParent != null)
                     {
-                        oldParent.Right = current;
-                        current.Parent = oldParent;
+                        oldParent.Right = this.lastAddedNode;
+                        this.lastAddedNode.Parent = oldParent;
                     }
                 }
 
-                if (this.Compare(current.Value, this.root.Value) <= 0)
+                if (this.Compare(this.lastAddedNode.Value, this.root.Value) <= 0)
                 {
-                    this.root = current;
+                    this.root = this.lastAddedNode;
                 }
-                listInternal.Add(item);
+
+                this.listInternal.Add(item);
             }
         }
 
-        public T RangeExtremum(int rangeInclusiveStart, int rangeExclusiveEnd)
+        public T GetRangeExtremum(int rangeInclusiveStart, int rangeExclusiveEnd)
         {
+            if (rangeInclusiveStart < 0 || rangeExclusiveEnd > this.Count)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
             CartesianTreeNode<T> current = this.root;
             while (current.Index < rangeInclusiveStart || current.Index >= rangeExclusiveEnd)
             {
@@ -98,16 +102,38 @@ namespace Padstone.Data
             return current.Value;
         }
 
-        public T this[int index]
+        public void AddRange(IEnumerable<T> collection)
         {
-            get
+            foreach (T item in collection)
             {
-                return this.listInternal[index];
+                this.AddInternal(item);
             }
-            set
-            {
-                throw new NotImplementedException();
-            }
+        }
+
+        public void Add(T item)
+        {
+            this.AddInternal(item);
+        }
+
+        public void Clear()
+        {
+            this.listInternal.Clear();
+            this.root = null;
+        }
+
+        public bool Contains(T item)
+        {
+            return this.listInternal.Contains(item);
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            this.listInternal.CopyTo(array, arrayIndex);
+        }
+
+        public int IndexOf(T item)
+        {
+            return this.listInternal.IndexOf(item);
         }
 
         public int Count
@@ -123,6 +149,18 @@ namespace Padstone.Data
             get
             {
                 return false;
+            }
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                return this.listInternal[index];
+            }
+            set
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -163,13 +201,6 @@ namespace Padstone.Data
             this.Initialize(collection, comparison, selectMaxValues);
         }
 
-        #region IList<T> methods
-
-        public int IndexOf(T item)
-        {
-            return this.listInternal.IndexOf(item);
-        }
-
         public void Insert(int index, T item)
         {
             throw new NotImplementedException();
@@ -178,27 +209,6 @@ namespace Padstone.Data
         public void RemoveAt(int index)
         {
             throw new NotImplementedException();
-        }
-
-        public void Add(T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Clear()
-        {
-            this.listInternal.Clear();
-            this.root = null;
-        }
-
-        public bool Contains(T item)
-        {
-            return this.listInternal.Contains(item);
-        }
-
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            this.listInternal.CopyTo(array, arrayIndex);
         }
 
         public bool Remove(T item)
@@ -215,7 +225,5 @@ namespace Padstone.Data
         {
             return this.GetEnumerator();
         }
-
-        #endregion
     }
 }
