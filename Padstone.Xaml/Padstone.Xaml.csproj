@@ -48,6 +48,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BooleanBox.cs" />
+    <Compile Include="CommandBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DelegateCommand.cs" />
     <Compile Include="PropertyName.cs" />
     <Compile Include="Controls\ScrollZoomBar.cs" />
     <Page Include="Themes\Generic.xaml">
