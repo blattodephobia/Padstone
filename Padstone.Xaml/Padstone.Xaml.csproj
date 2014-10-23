@@ -48,13 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BooleanBox.cs" />
-    <Compile Include="PropertyName.cs" />
+    <Compile Include="BindingSupport\PropertyName.cs" />
     <Compile Include="Controls\ScrollZoomBar.cs" />
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="BindableObject.cs" />
+    <Compile Include="BindingSupport\BindableObject.cs" />
     <Compile Include="Controls\DataVisualization\Axis\AxisBase.cs" />
     <Compile Include="Controls\DataVisualization\Axis\ContinuousAxis.cs" />
     <Compile Include="Controls\DataVisualization\Axis\DiscreteAxis.cs" />
