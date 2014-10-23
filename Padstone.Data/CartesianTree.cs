@@ -9,7 +9,7 @@ namespace Padstone.Data
     public class CartesianTree<T> : IList<T>
     {
         private CartesianTreeNode<T> root;
-        private CartesianTreeNode<T> lastAddedNode;
+        private CartesianTreeNode<T> rightMostNode;
 
         private static int IComparableResult(T x, T y)
         {
@@ -17,7 +17,7 @@ namespace Padstone.Data
             return _x.CompareTo(y);
         }
 
-        private Comparison<T> GetInvertedComparison(Comparison<T> comparison)
+        private static Comparison<T> GetInvertedComparison(Comparison<T> comparison)
         {
             Comparison<T> result = delegate (T x, T y)
             {
@@ -33,7 +33,7 @@ namespace Padstone.Data
 
         private void Initialize(IEnumerable<T> collection, Comparison<T> comparison, bool selectMaxValues)
         {
-            this.Compare = selectMaxValues ? this.GetInvertedComparison(comparison) : comparison;
+            this.Compare = selectMaxValues ? GetInvertedComparison(comparison) : comparison;
             this.IsMaxQueryTree = selectMaxValues;
             this.AddRange(collection);
         }
@@ -44,35 +44,35 @@ namespace Padstone.Data
             if (this.root == null)
             {
                 this.root = new CartesianTreeNode<T>() { Index = 0, Value = item };
-                this.lastAddedNode = this.root;
+                this.rightMostNode = this.root;
                 this.listInternal.Add(item);
             }
             else
             {
                 if (this.Compare(root.Value, item) < 0)
                 {
-                    this.lastAddedNode.Right = new CartesianTreeNode<T>() { Index = currentIndex, Value = item, Parent = this.lastAddedNode };
-                    this.lastAddedNode = this.lastAddedNode.Right;
+                    this.rightMostNode.Right = new CartesianTreeNode<T>() { Index = currentIndex, Value = item, Parent = this.rightMostNode };
+                    this.rightMostNode = this.rightMostNode.Right;
                 }
                 else
                 {
-                    while (this.lastAddedNode.Parent != null && this.Compare(this.lastAddedNode.Parent.Value, item) >= 0)
+                    while (this.rightMostNode.Parent != null && this.Compare(this.rightMostNode.Parent.Value, item) >= 0)
                     {
-                        this.lastAddedNode = this.lastAddedNode.Parent;
+                        this.rightMostNode = this.rightMostNode.Parent;
                     }
-                    CartesianTreeNode<T> oldParent = this.lastAddedNode.Parent;
-                    this.lastAddedNode.Parent = new CartesianTreeNode<T>() { Index = currentIndex, Value = item, Left = this.lastAddedNode };
-                    this.lastAddedNode = this.lastAddedNode.Parent;
+                    CartesianTreeNode<T> oldParent = this.rightMostNode.Parent;
+                    this.rightMostNode.Parent = new CartesianTreeNode<T>() { Index = currentIndex, Value = item, Left = this.rightMostNode };
+                    this.rightMostNode = this.rightMostNode.Parent;
                     if (oldParent != null)
                     {
-                        oldParent.Right = this.lastAddedNode;
-                        this.lastAddedNode.Parent = oldParent;
+                        oldParent.Right = this.rightMostNode;
+                        this.rightMostNode.Parent = oldParent;
                     }
                 }
 
-                if (this.Compare(this.lastAddedNode.Value, this.root.Value) <= 0)
+                if (this.Compare(this.rightMostNode.Value, this.root.Value) <= 0)
                 {
-                    this.root = this.lastAddedNode;
+                    this.root = this.rightMostNode;
                 }
 
                 this.listInternal.Add(item);

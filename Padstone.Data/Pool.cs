@@ -9,44 +9,49 @@ namespace Padstone.Data
     public class Pool<T>
     {
         private static Func<T> DefaultInstanceProvider = () => Activator.CreateInstance<T>();
-
+        
+        private readonly bool IsTemplateReferenceType = default(T) == null;
         private Func<T> instanceProvider;
         private T[] poolInternal;
-        private int capacity;
         private int nextObjectIndex;
-
-        private bool isTemplateReferenceType = default(T) == null;
+        
+        protected virtual void OnNewObjectAccessed()
+        {
+            if (this.NextObjectIndex == this.Capacity)
+            {
+                this.NextObjectIndex = 0;
+                this.InitializePool();
+            }
+        }
 
         private T[] PoolInternal
         {
             get
             {
-                if (this.poolInternal == null || this.nextObjectIndex > this.Capacity - 1)
-                {
-                    this.InitializePool();
-                }
-
+                this.OnNewObjectAccessed();
                 return this.poolInternal;
             }
         }
 
-        public int Capacity
+        private int NextObjectIndex
         {
             get
             {
-                return this.capacity;
+                return this.nextObjectIndex;
             }
 
             set
             {
-                this.capacity = value;
+                this.nextObjectIndex = value;
             }
         }
+
+        public int Capacity { get; private set; }
 
         private void InitializePool()
         {
             this.poolInternal = new T[this.Capacity];
-            if (this.isTemplateReferenceType || this.instanceProvider != DefaultInstanceProvider)
+            if (this.IsTemplateReferenceType || this.instanceProvider != DefaultInstanceProvider)
             {
                 for (int i = 0; i < this.poolInternal.Length; i++)
                 {
@@ -57,18 +62,20 @@ namespace Padstone.Data
 
         public T GetInstance()
         {
-            this.nextObjectIndex++;
-            return this.PoolInternal[this.nextObjectIndex];
+            this.NextObjectIndex++;
+            return this.PoolInternal[this.NextObjectIndex];
         }
 
         public Pool()
         {
             this.instanceProvider = DefaultInstanceProvider;
+            this.InitializePool();
         }
 
         public Pool(Func<T> instanceProvider)
         {
             this.instanceProvider = instanceProvider;
+            this.InitializePool();
         }
     }
 }
