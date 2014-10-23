@@ -1,0 +1,22 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:padstone="https://github.com/blattodephobia/Padstone"
+		x:Class="ControlsDemo.MainWindow"
+		Title="MainWindow"
+		Height="350"
+		Width="525">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<StackPanel>
+			<TextBlock Text="{Binding ScrollOffset, ElementName=ScrollZoomBar, StringFormat='Offset: {0}'}" />
+			<TextBlock Text="{Binding Zoom, ElementName=ScrollZoomBar, StringFormat='Zoom: {0}'}" />
+		</StackPanel>
+
+		<padstone:ScrollZoomBar x:Name="ScrollZoomBar"
+								Grid.Row="1" />
+	</Grid>
+</Window>
