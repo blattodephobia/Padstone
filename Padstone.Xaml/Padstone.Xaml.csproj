@@ -48,7 +48,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BooleanBox.cs" />
+    <Compile Include="Commands\CommandBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="BindingSupport\PropertyName.cs" />
+    <Compile Include="Controls\DragCallbackParameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Markup\InputDataBinding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Markup\InputDevice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Markup\InputValueBindingMode.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controls\ScrollZoomBar.cs" />
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -64,6 +80,13 @@
     <Compile Include="Controls\DataVisualization\Chart\Chart.cs" />
     <Compile Include="Controls\DataVisualization\DataVisualizationControl.cs" />
     <Compile Include="Controls\DataVisualization\VisualDataPoint.cs" />
+    <Compile Include="MouseTrackingService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OrientationBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewportPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

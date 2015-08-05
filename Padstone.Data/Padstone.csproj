@@ -7,8 +7,8 @@
     <ProjectGuid>{8F99C784-CBE4-4F6D-AEFC-BB6A5DDB9F2E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Padstone.Data</RootNamespace>
-    <AssemblyName>Padstone.Data</AssemblyName>
+    <RootNamespace>Padstone</RootNamespace>
+    <AssemblyName>Padstone</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -46,6 +46,9 @@
     <Compile Include="CartesianTreeNode.cs" />
     <Compile Include="Pool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

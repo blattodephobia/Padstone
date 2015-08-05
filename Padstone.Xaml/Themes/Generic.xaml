@@ -27,11 +27,41 @@
 		</Setter>
 	</Style>
 
-    <Style TargetType="{x:Type local:ScrollZoomBar}">
-        <Setter Property="Template">
-            <Setter.Value>
-				<ControlTemplate TargetType="{x:Type local:ScrollZoomBar}" />
+	<Style TargetType="{x:Type local:ScrollZoomBar}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:ScrollZoomBar}">
+					<Canvas HorizontalAlignment="Stretch">
+						<Border x:Name="PART_Thumb"
+								Background="BlueViolet"
+								HorizontalAlignment="Left"
+								Width="50"
+								Height="50" />
+					</Canvas>
+					
+					<ControlTemplate.Triggers>
+						<Trigger Property="Orientation"
+								 Value="Horizontal">
+							<Setter TargetName="PART_Thumb"
+									Property="RenderTransform">
+								<Setter.Value>
+									<TranslateTransform X="{Binding ScrollOffset, RelativeSource={RelativeSource TemplatedParent}}" />
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+
+						<Trigger Property="Orientation"
+								 Value="Vertical">
+							<Setter TargetName="PART_Thumb"
+									Property="RenderTransform">
+								<Setter.Value>
+									<TranslateTransform Y="{Binding ScrollOffset, RelativeSource={RelativeSource TemplatedParent}}" />
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
 			</Setter.Value>
-        </Setter>
-    </Style>
+		</Setter>
+	</Style>
 </ResourceDictionary>

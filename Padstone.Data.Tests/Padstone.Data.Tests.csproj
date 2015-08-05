@@ -55,9 +55,9 @@
     <Compile Include="PoolTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Padstone.Data\Padstone.Data.csproj">
+    <ProjectReference Include="..\Padstone.Data\Padstone.csproj">
       <Project>{8f99c784-cbe4-4f6d-aefc-bb6a5ddb9f2e}</Project>
-      <Name>Padstone.Data</Name>
+      <Name>Padstone</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

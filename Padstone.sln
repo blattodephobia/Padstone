@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Padstone.Data", "Padstone.Data\Padstone.Data.csproj", "{8F99C784-CBE4-4F6D-AEFC-BB6A5DDB9F2E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Padstone", "Padstone.Data\Padstone.csproj", "{8F99C784-CBE4-4F6D-AEFC-BB6A5DDB9F2E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Padstone.Data.Tests", "Padstone.Data.Tests\Padstone.Data.Tests.csproj", "{364EC255-3A2D-4E4A-A5D6-FED781C5128E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlsDemo", "ControlsDemo\ControlsDemo.csproj", "{FDCB908C-7BCC-4DB7-8BAF-F6F4FDB27720}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Padstone.Xaml", "Padstone.Xaml\Padstone.Xaml.csproj", "{741C0DC4-AA69-4D4E-9A3B-EF98C9A3522D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Padstone.Xaml.Themes", "Padstone.Xaml.Themes\Padstone.Xaml.Themes.csproj", "{53558E85-CD2C-4312-935E-848D9BC0F3A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{741C0DC4-AA69-4D4E-9A3B-EF98C9A3522D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{741C0DC4-AA69-4D4E-9A3B-EF98C9A3522D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{741C0DC4-AA69-4D4E-9A3B-EF98C9A3522D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53558E85-CD2C-4312-935E-848D9BC0F3A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53558E85-CD2C-4312-935E-848D9BC0F3A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53558E85-CD2C-4312-935E-848D9BC0F3A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53558E85-CD2C-4312-935E-848D9BC0F3A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
