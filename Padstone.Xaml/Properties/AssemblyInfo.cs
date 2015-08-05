@@ -55,6 +55,7 @@ using System.Windows.Markup;
 [assembly: AssemblyVersion("0.1.0.0")]
 [assembly: AssemblyFileVersion("0.1.0.0")]
 
+[assembly: XmlnsPrefix("https://github.com/blattodephobia/Padstone/xaml-2006", "padstone")]
 [assembly: XmlnsDefinition("https://github.com/blattodephobia/Padstone/xaml-2006", "Padstone.Xaml")]
 [assembly: XmlnsDefinition("https://github.com/blattodephobia/Padstone/xaml-2006", "Padstone.Xaml.Controls")]
 [assembly: XmlnsDefinition("https://github.com/blattodephobia/Padstone/xaml-2006", "Padstone.Xaml.Markup")]
