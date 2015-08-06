@@ -1,19 +1,33 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Windows;
+using Expression = System.Linq.Expressions.Expression;
 
 namespace Padstone.Xaml
 {
     public static class PropertyName
     {
+        private static Expression RemoveConvert(Expression expression)
+        {
+            // Expressions using constants use their values rather names after compilation. Therefore,
+            // any information regarding the constant's name is stripped from the Expression object.
+            if (expression is ConstantExpression) throw new InvalidOperationException("Constant member access expressions are not supported.");
+
+            Expression result = expression;
+            while (
+                result.NodeType == ExpressionType.Convert ||
+                result.NodeType == ExpressionType.ConvertChecked)
+            {
+                result = ((UnaryExpression)result).Operand;
+            }
+
+            return result;
+        }
+
         private static readonly string DependencyPropertyNameSuffix = "Property";
         private static string ExtractMemberName(LambdaExpression memberSelector)
         {
-            MemberExpression expression =
-                memberSelector.Body.NodeType == ExpressionType.Convert ?
-                    (memberSelector.Body as UnaryExpression).Operand as MemberExpression
-                    :
-                    memberSelector.Body as MemberExpression;
+            MemberExpression expression = RemoveConvert(memberSelector.Body) as MemberExpression;
             string result = expression.Member.Name;
             return result;
         }
@@ -25,12 +39,6 @@ namespace Padstone.Xaml
         }
 
         public static string Get<T>(Expression<Func<T>> memberSelector)
-        {
-            string memberName = ExtractMemberName(memberSelector);
-            return memberName;
-        }
-
-        public static string Get(Expression<Func<object>> memberSelector)
         {
             string memberName = ExtractMemberName(memberSelector);
             return memberName;

@@ -3,7 +3,7 @@
 namespace Padstone.Xaml
 {
 	/// <summary>
-	/// Wraps a delegate of type <typeparamref name="System.Action"/> in an ICommand object that executes that delegate when ICommand.Execute is invoked.
+	/// Wraps a delegate of type <see cref="System.Action"/> in an ICommand object that executes that delegate when ICommand.Execute is invoked.
 	/// </summary>
     public class DelegateCommand : CommandBase
     {
@@ -26,7 +26,7 @@ namespace Padstone.Xaml
         }
 
 		/// <summary>
-		/// Initializes a new <typeparamref name="Padstone.Xaml.DelegateCommand"/> that can always be executed.
+		/// Initializes a new <see cref="DelegateCommand"/> that can always be executed.
 		/// </summary>
 		/// <param name="action">The method to be executed when ICommand.Execute is called.</param>
         public DelegateCommand(Action<object> action) :
@@ -35,7 +35,7 @@ namespace Padstone.Xaml
         }
 
 		/// <summary>
-		/// Initializes a new <typeparamref name="Padstone.Xaml.DelegateCommand"/>
+		/// Initializes a new <see cref="DelegateCommand"/>
 		/// </summary>
 		/// <param name="action">The method to be executed when ICommand.Execute is called.</param>
 		/// <param name="canExecuteCallback">The callback method that determines whether the <see cref="Execute"/> method should be called.</param>
@@ -45,7 +45,7 @@ namespace Padstone.Xaml
         }
 
 		/// <summary>
-		/// Initializes a new <typeparamref name="Padstone.Xaml.DelegateCommand"/>
+		/// Initializes a new <see cref="DelegateCommand"/>
 		/// </summary>
 		/// <param name="action">The method to be executed when ICommand.Execute is called.</param>
 		/// <param name="canExecuteCallback">The callback method that determines whether the <see cref="Execute"/> method should be called.</param>

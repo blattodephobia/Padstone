@@ -49,7 +49,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BooleanBox.cs" />
+    <Compile Include="Internal\BooleanBox.cs" />
     <Compile Include="Commands\CommandBase.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -59,7 +59,7 @@
     <Compile Include="Controls\DragCallbackParameter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Internal\Expressions.cs" />
+    <Compile Include="Controls\PageLink.cs" />
     <Compile Include="Markup\InputDataBinding.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -87,7 +87,7 @@
     <Compile Include="MouseTrackingService.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OrientationBox.cs">
+    <Compile Include="Internal\OrientationBox.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewportPoint.cs" />

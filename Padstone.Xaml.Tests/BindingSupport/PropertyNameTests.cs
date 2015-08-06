@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Windows;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Padstone.Xaml.Internal;
 
 namespace Padstone.Xaml.Tests
 {
     [TestClass]
-    public class ExpressionsTests
+    public class PropertyNameTests
     {
         [TestClass]
         public class NameOfTests
@@ -23,61 +23,69 @@ namespace Padstone.Xaml.Tests
             [TestMethod]
             public void ReturnsInstanceMemberName()
             {
-                string actual = Expressions.NameOf(() => this.TestProperty);
+                string actual = PropertyName.Get(() => this.TestProperty);
                 Assert.AreEqual("TestProperty", actual);
             }
 
             [TestMethod]
             public void ReturnsInstanceMemberNameWithBoxing()
             {
-                string actual = Expressions.NameOf<object>(() => this.TestValueTypeProperty);
+                string actual = PropertyName.Get<object>(() => this.TestValueTypeProperty);
                 Assert.AreEqual("TestValueTypeProperty", actual);
             }
 
             [TestMethod]
             public void ReturnsInstanceFieldName()
             {
-                string actual = Expressions.NameOf(() => this.testField);
+                string actual = PropertyName.Get(() => this.testField);
                 Assert.AreEqual("testField", actual);
             }
 
             [TestMethod]
             public void ReturnsNonInstantiatedMemberName()
             {
-                string actual = Expressions.NameOf<NameOfTests>((obj) => obj.TestProperty);
+                string actual = PropertyName.Get<NameOfTests>((obj) => obj.TestProperty);
                 Assert.AreEqual("TestProperty", actual);
             }
 
             [TestMethod]
             public void ReturnsNonInstantiatedMemberNameWithBoxing()
             {
-                string actual = Expressions.NameOf<NameOfTests>((obj) => obj.TestValueTypeProperty);
+                string actual = PropertyName.Get<NameOfTests>((obj) => obj.TestValueTypeProperty);
                 Assert.AreEqual("TestValueTypeProperty", actual);
             }
 
             [TestMethod]
             public void ReturnsNonInstantiatedFieldName()
             {
-                string actual = Expressions.NameOf<NameOfTests>((obj) => obj.testField);
+                string actual = PropertyName.Get<NameOfTests>((obj) => obj.testField);
                 Assert.AreEqual("testField", actual);
             }
 
             [TestMethod]
             public void ReturnsStaticPropertyName()
             {
-                string actual = Expressions.NameOf(() => StaticProperty);
+                string actual = PropertyName.Get(() => StaticProperty);
                 Assert.AreEqual("StaticProperty", actual);
-                actual = Expressions.NameOf(() => NameOfTests.StaticProperty);
+                actual = PropertyName.Get(() => NameOfTests.StaticProperty);
                 Assert.AreEqual("StaticProperty", actual);
+            }
+
+            [TestMethod]
+            public void ReturnsDependencyPropertyName()
+            {
+                DependencyProperty testProperty = null;
+                string actual = PropertyName.FromDependencyProperty(() => testProperty);
+                Assert.AreEqual("test", actual);
             }
 
             [TestMethod]
             [ExpectedException(typeof(InvalidOperationException))]
             public void ThrowsOnConstantExpression()
             {
-                string actual = Expressions.NameOf(() => Constant);
+                string actual = PropertyName.Get(() => Constant);
                 Assert.AreEqual("Constant", actual);
-                actual = Expressions.NameOf(() => NameOfTests.Constant);
+                actual = PropertyName.Get(() => NameOfTests.Constant);
                 Assert.AreEqual("Constant", actual);
             }
         }
