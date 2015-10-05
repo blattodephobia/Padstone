@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
 
 namespace Padstone.Xaml
 {
@@ -11,6 +12,13 @@ namespace Padstone.Xaml
 		public static object Box(Orientation value)
 		{
 			return value == Orientation.Horizontal ? HorizontalOrientationBox : VerticalOrientationBox;
+		}
+
+		public static Orientation Unbox(object value)
+		{
+			if (object.ReferenceEquals(value, HorizontalOrientationBox)) return Orientation.Horizontal;
+			else if (object.ReferenceEquals(value, VerticalOrientationBox)) return Orientation.Vertical;
+			else throw new InvalidCastException();
 		}
 	}
 }

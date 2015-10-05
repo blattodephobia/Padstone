@@ -14,12 +14,19 @@ namespace Padstone.Xaml
         
         public override bool CanExecute(object parameter)
         {
-            return this.canExecuteCallback.Invoke(parameter);
+			try
+			{
+				return this.canExecuteCallback.Invoke(parameter);
+			}
+			catch
+			{
+				return false;
+			}
         }
 
         public override void Execute(object parameter)
         {
-            if (this.action != null)
+            if (this.action != null && this.CanExecute(parameter))
             {
                 this.action.Invoke(parameter);
             }

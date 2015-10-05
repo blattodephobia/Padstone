@@ -18,34 +18,32 @@ using System.Windows.Shapes;
 
 namespace Padstone.Xaml.Controls
 {
-    public class DataPager : ItemsControl
+    public class DataPager : Control
     {
         private static readonly int DefaultPageSize = 15;
 
-        private static readonly PageLink DefaultPage = new PageLink(0);
-
         #region DependencyProperty declarations
 
-        public static readonly DependencyProperty PageItemsProperty;
-        protected static readonly DependencyPropertyKey PageItemsPropertyKey = DependencyProperty.RegisterReadOnly(
-            PropertyName.FromDependencyProperty(() => PageItemsProperty),
+        protected static readonly DependencyPropertyKey CurrentPageItemsPropertyKey = DependencyProperty.RegisterReadOnly(
+			PropertyName.Get<DataPager>(p => p.CurrentPageItems),
             typeof(ObservableCollection<object>),
             typeof(DataPager),
             new PropertyMetadata(
                 new ObservableCollection<object>(),
                 PageItemsPropertyChanged));
+        public static readonly DependencyProperty CurrentPageItemsProperty = CurrentPageItemsPropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty PageLinksProperty;
         protected static readonly DependencyPropertyKey PageLinksPropertyKey = DependencyProperty.RegisterReadOnly(
-            PropertyName.FromDependencyProperty(() => PageLinksProperty),
+			PropertyName.Get<DataPager>(p => p.PageLinks),
             typeof(ObservableCollection<PageLink>),
             typeof(DataPager),
             new PropertyMetadata(
                 new ObservableCollection<PageLink>(),
-                PageLinksPropertyChanged));
+				PageLinksPropertyChanged));
+		public static readonly DependencyProperty PageLinksProperty = PageLinksPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty PageSizeProperty = DependencyProperty.Register(
-            PropertyName.FromDependencyProperty(() => PageSizeProperty),
+			PropertyName.Get<DataPager>(p => p.PageSize),
             typeof(int),
             typeof(DataPager),
             new PropertyMetadata(
@@ -53,15 +51,155 @@ namespace Padstone.Xaml.Controls
                 PageSizePropertyChanged,
                 CoercePageSizeCallback));
         
-        public static readonly DependencyProperty CurrentPageProperty = DependencyProperty.Register(
-            PropertyName.FromDependencyProperty(() => CurrentPageProperty),
-            typeof(PageLink),
+        public static readonly DependencyProperty CurrentPageIndexProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.CurrentPageIndex),
+            typeof(int),
             typeof(DataPager),
             new PropertyMetadata(
-                DefaultPage,
+                0,
                 CurrentPagePropertyChanged,
                 CoerceCurrentPageCallback));
-        
+		
+		protected static readonly DependencyPropertyKey NavigateToPageCommandPropertyKey = DependencyProperty.RegisterReadOnly(
+			PropertyName.Get<DataPager>(p => p.NavigateToPageCommand),
+			typeof(ICommand),
+			typeof(DataPager),
+			new PropertyMetadata(
+				null,
+				NavigateToPageCommandPropertyChanged));
+		public static readonly DependencyProperty NavigateToPageCommandProperty = NavigateToPageCommandPropertyKey.DependencyProperty;
+
+        protected static readonly DependencyPropertyKey NavigateToPreviousPageCommandPropertyKey = DependencyProperty.RegisterReadOnly(
+			PropertyName.Get<DataPager>(p => p.NavigateToPreviousPageCommand),
+			typeof(ICommand),
+			typeof(DataPager),
+			new PropertyMetadata(
+				null,
+				NavigateToPreviousPageCommandPropertyChanged));
+		public static readonly DependencyProperty NavigateToPreviousPageCommandProperty = NavigateToPreviousPageCommandPropertyKey.DependencyProperty;
+
+        protected static readonly DependencyPropertyKey NavigateToNextPageCommandPropertyKey = DependencyProperty.RegisterReadOnly(
+			PropertyName.Get<DataPager>(p => p.NavigateToNextPageCommand),
+			typeof(ICommand),
+			typeof(DataPager),
+			new PropertyMetadata(
+				null,
+				NavigateToNextPageCommandPropertyChanged));
+		public static readonly DependencyProperty NavigateToNextPageCommandProperty = NavigateToNextPageCommandPropertyKey.DependencyProperty;
+
+		protected static readonly DependencyPropertyKey NavigateToFirstPageCommandPropertyKey = DependencyProperty.RegisterReadOnly(
+			PropertyName.Get<DataPager>(p => p.NavigateToFirstPageCommand),
+			typeof(ICommand),
+			typeof(DataPager),
+			new PropertyMetadata(
+				null,
+				NavigateToFirstPageCommandPropertyChanged));
+		public static readonly DependencyProperty NavigateToFirstPageCommandProperty = NavigateToFirstPageCommandPropertyKey.DependencyProperty;
+
+		protected static readonly DependencyPropertyKey NavigateToLastPageCommandPropertyKey = DependencyProperty.RegisterReadOnly(
+			PropertyName.Get<DataPager>(p => p.NavigateToLastPageCommand),
+			typeof(ICommand),
+			typeof(DataPager),
+			new PropertyMetadata(
+				null,
+				NavigateToLastPageCommandPropertyChanged));
+
+		public static readonly DependencyProperty NavigateToLastPageCommandProperty = NavigateToLastPageCommandPropertyKey.DependencyProperty;
+
+		public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.Orientation),
+			typeof(Orientation),
+			typeof(DataPager),
+			new PropertyMetadata(
+				Orientation.Horizontal,
+				OrientationPropertyChanged));
+		
+		public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.ItemsSource),
+			typeof(IEnumerable),
+			typeof(DataPager),
+			new PropertyMetadata(
+				null,
+				ItemsSourcePropertyChanged));
+
+		public static readonly DependencyProperty MaxTrailingPageLinksProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.MaxTrailingPageLinks),
+			typeof(int),
+			typeof(DataPager),
+			new PropertyMetadata(
+				3,
+				MaxTrailingPageLinksPropertyChanged,
+				CoerceMaxTrailingPageLinksCallback));
+
+		public static readonly DependencyProperty MaxMainPageLinksProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.MaxMainPageLinks),
+			typeof(int),
+			typeof(DataPager),
+			new PropertyMetadata(
+				8,
+				MaxMainPageLinksPropertyChanged,
+				CoerceMaxMainPageLinksCallback));
+
+		public static readonly DependencyProperty NavigateToFirstPageElementTemplateProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.NavigateToFirstPageElementTemplate),
+			typeof(DataTemplate),
+			typeof(DataPager),
+			new PropertyMetadata(null));
+
+		public static readonly DependencyProperty NavigateToPreviousPageElementTemplateProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.NavigateToPreviousPageElementTemplate),
+			typeof(DataTemplate),
+			typeof(DataPager),
+			new PropertyMetadata(null));
+
+		public static readonly DependencyProperty PageLinkTemplateProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.PageLinkTemplate),
+			typeof(DataTemplate),
+			typeof(DataPager),
+			new PropertyMetadata(null));
+
+		public static readonly DependencyProperty NavigateToNextPageElementTemplateProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.NavigateToNextPageElementTemplate),
+			typeof(DataTemplate),
+			typeof(DataPager),
+			new PropertyMetadata(null));
+
+		public static readonly DependencyProperty NavigateToLastPageElementTemplateProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.NavigateToLastPageElementTemplate),
+			typeof(DataTemplate),
+			typeof(DataPager),
+			new PropertyMetadata(null));
+
+		public static readonly DependencyProperty NavigateToFirstPageElementStyleProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.NavigateToFirstPageElementStyle),
+			typeof(Style),
+			typeof(DataPager),
+			new PropertyMetadata(null));
+
+		public static readonly DependencyProperty NavigateToPreviousPageElementStyleProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.NavigateToPreviousPageElementStyle),
+			typeof(Style),
+			typeof(DataPager),
+			new PropertyMetadata(null));
+
+		public static readonly DependencyProperty PageLinkElementStyleProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.PageLinkElementStyle),
+			typeof(Style),
+			typeof(DataPager),
+			new PropertyMetadata(null));
+
+		public static readonly DependencyProperty NavigateToNextPageElementStyleProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.NavigateToNextPageElementStyle),
+			typeof(Style),
+			typeof(DataPager),
+			new PropertyMetadata(null));
+
+		public static readonly DependencyProperty NavigateToLastPageElementStyleProperty = DependencyProperty.Register(
+			PropertyName.Get<DataPager>(p => p.NavigateToLastPageElementStyle),
+			typeof(Style),
+			typeof(DataPager),
+			new PropertyMetadata(null));
+
         #endregion
 
         #region Static helper methods
@@ -74,14 +212,56 @@ namespace Padstone.Xaml.Controls
             List<PageLink> result = Enumerable.Range(firstPageIndex, pagesCount).Select(index => new PageLink(index)).ToList();
             return result;
         }
-
+		
         #endregion
 
         #region DependencyProperty handlers
+		private static void ItemsSourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			DataPager _obj = d as DataPager;
+			_obj.itemsSource = e.NewValue as IEnumerable;
+			_obj.OnItemsSourceChanged(e.OldValue as IEnumerable, e.NewValue  as IEnumerable);
+
+			INotifyCollectionChanged _observableOld = e.OldValue as INotifyCollectionChanged;
+			if (_observableOld != null) _observableOld.CollectionChanged -= _obj.INotifyCollectionChangedEventHandler;
+
+			INotifyCollectionChanged _observableNew = e.NewValue as INotifyCollectionChanged;
+			if (_observableNew != null) _observableNew.CollectionChanged += _obj.INotifyCollectionChangedEventHandler;
+		}
+
+        private static void OrientationPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as DataPager).orientation = OrientationBox.Unbox(e.NewValue);
+        }
+
+        private static void NavigateToPageCommandPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as DataPager).navigateToPageCommand = e.NewValue as DelegateCommand;
+        }
+
+		private static void NavigateToPreviousPageCommandPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+			(d as DataPager).navigateToPreviousPageCommand = e.NewValue as DelegateCommand;
+        }
+
+		private static void NavigateToNextPageCommandPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+			(d as DataPager).navigateToNextPageCommand = e.NewValue as DelegateCommand;
+        }
+
+		private static void NavigateToFirstPageCommandPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			(d as DataPager).navigateToFirstPageCommand = e.NewValue as DelegateCommand;
+		}
+
+		private static void NavigateToLastPageCommandPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			(d as DataPager).navigateToLastPageCommand = e.NewValue as DelegateCommand;
+		}
 
         private static void PageItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as DataPager).pageItems = e.NewValue as ObservableCollection<object>;
+            (d as DataPager).currentPageItems = e.NewValue as ObservableCollection<object>;
         }
 
         private static void PageLinksPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -96,27 +276,53 @@ namespace Padstone.Xaml.Controls
             pager.OnPageSizeChanged((int)e.OldValue, pager.pageSize);
         }
 
+		private static void MaxTrailingPageLinksPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			DataPager sender = d as DataPager;
+			sender.maxTrailingPageLinks = (int)e.NewValue;
+			sender.UpdatePageLinks(sender.ItemsSource);
+			sender.UpdateCurrentPageItems();
+		}
+
+		private static void MaxMainPageLinksPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			DataPager sender = d as DataPager;
+			sender.maxMainPageLinks = (int)e.NewValue;
+			sender.UpdatePageLinks(sender.ItemsSource);
+			sender.UpdateCurrentPageItems();
+		}
+
         private static object CoercePageSizeCallback(DependencyObject d, object baseValue)
         {
             int minValue = 1;
             return minValue.CompareTo((int)baseValue) > 0 ? minValue : baseValue;
         }
 
+        private static object CoerceMaxTrailingPageLinksCallback(DependencyObject d, object baseValue)
+		{
+			return Math.Max((int)baseValue, 0);
+		}
+
+        private static object CoerceMaxMainPageLinksCallback(DependencyObject d, object baseValue)
+		{
+			return Math.Max((int)baseValue, 1);
+		}
+
         private static void CurrentPagePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             DataPager sender = d as DataPager;
-            sender.currentPage = e.NewValue as PageLink;
-            sender.OnCurrentPageChanged(e.OldValue as PageLink, e.NewValue as PageLink);
+			sender.currentPageIndex = (int)e.NewValue;
+            sender.OnCurrentPageChanged(sender.PageLinks[(int)e.OldValue], sender.PageLinks[(int)e.NewValue]);
         }
 
         private static object CoerceCurrentPageCallback(DependencyObject d, object baseValue)
         {
-            PageLink currentValue = baseValue as PageLink;
+			int currentValue = (int)baseValue;
             int minIndex = 0;
             int maxIndex = (d as DataPager).PageLinks.Count - 1;
 
-            PageLink result = currentValue != null && minIndex.CompareTo(currentValue.PageIndex) > 0 ? DefaultPage : baseValue as PageLink;
-            result = maxIndex.CompareTo(result.PageIndex) < 0 ? new PageLink(Math.Max(0, maxIndex)) : result;
+            int result = currentValue != null && minIndex.CompareTo(currentValue) > 0 ? 0 : currentValue;
+            result = maxIndex.CompareTo(result) < 0 ? Math.Max(0, maxIndex) : result;
             return result;
         }
 
@@ -125,35 +331,137 @@ namespace Padstone.Xaml.Controls
         static DataPager()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DataPager), new FrameworkPropertyMetadata(typeof(DataPager)));
-            PageItemsProperty = PageItemsPropertyKey.DependencyProperty;
-            PageLinksProperty = PageLinksPropertyKey.DependencyProperty;
         }
+		
+		#region Properties
+		
+		public DataTemplate NavigateToFirstPageElementTemplate
+		{
+			get { return (DataTemplate)this.GetValue(NavigateToFirstPageElementTemplateProperty); }
+			set { this.SetValue(NavigateToFirstPageElementTemplateProperty, value); }
+		}
 
-        private ObservableCollection<object> pageItems;
-        public ObservableCollection<object> PageItems
+		public DataTemplate NavigateToPreviousPageElementTemplate
+		{
+			get { return (DataTemplate)this.GetValue(NavigateToPreviousPageElementTemplateProperty); }
+			set { this.SetValue(NavigateToPreviousPageElementTemplateProperty, value); }
+		}
+
+		public DataTemplate PageLinkTemplate
+		{
+			get { return (DataTemplate)this.GetValue(PageLinkTemplateProperty); }
+			set { this.SetValue(PageLinkTemplateProperty, value); }
+		}
+
+		public DataTemplate NavigateToNextPageElementTemplate
+		{
+			get { return (DataTemplate)this.GetValue(NavigateToNextPageElementTemplateProperty); }
+			set { this.SetValue(NavigateToNextPageElementTemplateProperty, value); }
+		}
+
+		public DataTemplate NavigateToLastPageElementTemplate
+		{
+			get { return (DataTemplate)this.GetValue(NavigateToLastPageElementTemplateProperty); }
+			set { this.SetValue(NavigateToLastPageElementTemplateProperty, value); }
+		}
+
+		public Style NavigateToFirstPageElementStyle
+		{
+			get { return (Style)this.GetValue(NavigateToFirstPageElementStyleProperty); }
+			set { this.SetValue(NavigateToFirstPageElementStyleProperty, value); }
+		}
+		
+		public Style NavigateToPreviousPageElementStyle
+		{
+			get { return (Style)this.GetValue(NavigateToPreviousPageElementStyleProperty); }
+			set { this.SetValue(NavigateToPreviousPageElementStyleProperty, value); }
+		}
+		
+		public Style PageLinkElementStyle
+		{
+			get { return (Style)this.GetValue(PageLinkElementStyleProperty); }
+			set { this.SetValue(PageLinkElementStyleProperty, value); }
+		}
+				
+		public Style NavigateToNextPageElementStyle
+		{
+			get { return (Style)this.GetValue(NavigateToNextPageElementStyleProperty); }
+			set { this.SetValue(NavigateToNextPageElementStyleProperty, value); }
+		}
+
+		public Style NavigateToLastPageElementStyle
+		{
+			get { return (Style)this.GetValue(NavigateToLastPageElementStyleProperty); }
+			set { this.SetValue(NavigateToLastPageElementStyleProperty, value); }
+		}
+
+		private ObservableCollection<object> currentPageItems;
+        public ObservableCollection<object> CurrentPageItems
         {
             get
             {
-                return this.pageItems;
+                return this.currentPageItems;
             }
 
             private set
             {
-                this.SetValue(PageItemsPropertyKey, value);
+                this.SetValue(CurrentPageItemsPropertyKey, value);
             }
-        }
+		}
 
-        private PageLink currentPage;
-        public PageLink CurrentPage
+		private int maxTrailingPageLinks;
+		public int MaxTrailingPageLinks
+		{
+			get
+			{
+				return this.maxTrailingPageLinks;
+			}
+
+			set
+			{
+				this.SetValue(MaxTrailingPageLinksProperty, value);
+			}
+		}
+
+		private int maxMainPageLinks;
+		public int MaxMainPageLinks
+		{
+			get
+			{
+				return this.maxMainPageLinks;
+			}
+
+			set
+			{
+				this.SetValue(MaxMainPageLinksProperty, value);
+			}
+		}
+
+		private Orientation orientation;
+		public Orientation Orientation
+		{
+			get
+			{
+				return this.orientation;
+			}
+
+			set
+			{
+				this.SetValue(OrientationProperty, OrientationBox.Box(value));
+			}
+		}
+
+        private int currentPageIndex;
+        public int CurrentPageIndex
         {
             get
             {
-                return this.currentPage;
+                return this.currentPageIndex;
             }
 
             set
             {
-                this.SetValue(CurrentPageProperty, value);
+                this.SetValue(CurrentPageIndexProperty, value);
             }
         }
 
@@ -209,6 +517,50 @@ namespace Padstone.Xaml.Controls
             }
         }
 
+		public ICommand NavigateToFirstPageCommand
+		{
+			get
+			{
+				return this.navigateToFirstPageCommand;
+			}
+		}
+
+		public ICommand NavigateToLastPageCommand
+		{
+			get
+			{
+				return this.navigateToLastPageCommand;
+			}
+		}
+
+		private IEnumerable itemsSource;
+		public IEnumerable ItemsSource
+		{
+			get
+			{
+				return this.itemsSource;
+			}
+
+			set
+			{
+				this.SetValue(ItemsSourceProperty, value);
+			}
+		}
+
+		public override void BeginInit()
+		{
+			base.BeginInit();
+			this.IsInitializing = true;
+		}
+
+		public override void EndInit()
+		{
+			base.EndInit();
+			this.IsInitializing = false;
+		}
+
+		protected bool IsInitializing { get; set; }
+
         private DelegateCommand navigateToPreviousPageCommand;
         protected DelegateCommand NavigateToPreviousPageCommandInternal
         {
@@ -219,7 +571,7 @@ namespace Padstone.Xaml.Controls
 
             set
             {
-                this.navigateToPreviousPageCommand = value;
+				this.SetValue(NavigateToPreviousPageCommandPropertyKey, value);
             }
         }
 
@@ -233,9 +585,37 @@ namespace Padstone.Xaml.Controls
 
             set
             {
-                this.navigateToNextPageCommand = value;
+				this.SetValue(NavigateToNextPageCommandPropertyKey, value);
             }
         }
+
+		private DelegateCommand navigateToFirstPageCommand;
+		protected DelegateCommand NavigateToFirstPageCommandInternal
+		{
+			get
+			{
+				return this.navigateToFirstPageCommand;
+			}
+
+			set
+			{
+				this.SetValue(NavigateToFirstPageCommandPropertyKey, value);
+			}
+		}
+
+		private DelegateCommand navigateToLastPageCommand;
+		protected DelegateCommand NavigateToLastPageCommandInternal
+		{
+			get
+			{
+				return this.navigateToLastPageCommand;
+			}
+
+			set
+			{
+				this.SetValue(NavigateToLastPageCommandPropertyKey, value);
+			}
+		}
 
         private DelegateCommand navigateToPageCommand;
         protected DelegateCommand NavigateToPageCommandInternal
@@ -247,17 +627,18 @@ namespace Padstone.Xaml.Controls
 
             set
             {
-                this.navigateToPageCommand = value;
+				this.SetValue(NavigateToPageCommandPropertyKey, value);
             }
         }
 
-        public DataPager()
+		#endregion
+
+		public DataPager()
         {
             this.PageLinks = new ObservableCollection<PageLink>();
-            this.PageItems = new ObservableCollection<object>();
+            this.CurrentPageItems = new ObservableCollection<object>();
 
-            this.pageSize = DefaultPageSize;
-            this.currentPage = new PageLink(0);
+			this.pageSize = DefaultPageSize;
 
             this.NavigateToPreviousPageCommandInternal = new DelegateCommand(
                 this.NavigateToPreviousPage,
@@ -270,6 +651,14 @@ namespace Padstone.Xaml.Controls
             this.NavigateToPageCommandInternal = new DelegateCommand(
                 this.NavigateToPage,
                 this.CanNavigateToPageAt);
+
+			this.NavigateToFirstPageCommandInternal = new DelegateCommand(
+				this.NavigateToFirstPage,
+				this.CanNavigateToFirstPage);
+
+			this.NavigateToLastPageCommandInternal = new DelegateCommand(
+				this.NavigateToLastPage,
+				this.CanNavigateToLastPage);
         }
 
         protected virtual bool CanNavigateToPageAt(object pageLink)
@@ -280,74 +669,92 @@ namespace Padstone.Xaml.Controls
         protected virtual bool CanNavigateToNextPage()
         {
             return
-                this.CurrentPage != null &&
+                this.CurrentPageIndex != null &&
                 this.PageLinks.Any() &&
-                this.CurrentPage.PageIndex < this.PageLinks.Last().PageIndex;
+                this.CurrentPageIndex < this.PageLinks.Last().PageIndex;
         }
 
         protected virtual bool CanNavigateToPreviousPage()
         {
             return
-                this.CurrentPage != null &&
+                this.CurrentPageIndex != null &&
                 this.PageLinks.Any() &&
-                this.CurrentPage.PageIndex > this.PageLinks.First().PageIndex;
+                this.CurrentPageIndex > this.PageLinks.First().PageIndex;
         }
 
-        protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
+		protected virtual bool CanNavigateToFirstPage()
+		{
+			return this.CurrentPageIndex > 0;
+		}
+
+		protected virtual bool CanNavigateToLastPage()
+		{
+			return this.CurrentPageIndex < this.PageLinks.Count - 1;
+		}
+
+        protected virtual void OnItemsChanged(NotifyCollectionChangedEventArgs e)
         {
-            base.OnItemsChanged(e);
-            this.PerformPagesReflow(this.ItemsSource);
+            this.UpdatePageLinks(this.ItemsSource);
         }
 
-        protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
+        protected virtual void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
         {
-            base.OnItemsSourceChanged(oldValue, newValue);
-            this.PerformPagesReflow(this.ItemsSource);
+            this.UpdatePageLinks(this.ItemsSource);
+			this.UpdateCurrentPageItems();
         }
 
         protected virtual void OnPageSizeChanged(int oldValue, int newValue)
         {
-            this.PerformPagesReflow(this.ItemsSource);
-            this.UpdatePageItems();
+            this.UpdatePageLinks(this.ItemsSource);
+            this.UpdateCurrentPageItems();
         }
 
         protected virtual void OnCurrentPageChanged(PageLink oldValue, PageLink newValue)
         {
-            this.UpdatePageItems();
+            this.UpdateCurrentPageItems();
         }
 
-        protected void NavigateToPreviousPage(object dummy)
+		protected virtual void NavigateToFirstPage(object dummy)
+		{
+			this.NavigateToPage(this.PageLinks[0]);
+		}
+
+        protected virtual void NavigateToPreviousPage(object dummy)
         {
-            if (this.CanNavigateToPreviousPage())
-            {
-                this.CurrentPage = this.PageLinks.First(p => p.PageIndex == this.CurrentPage.PageIndex - 1);
-            }
+			this.NavigateToPage(this.PageLinks[this.CurrentPageIndex - 1]);
         }
 
-        protected void NavigateToNextPage(object dummy)
+		protected virtual void NavigateToPage(object pageLink)
         {
-            if (this.CanNavigateToNextPage())
-            {
-                this.CurrentPage = this.PageLinks.First(p => p.PageIndex == this.CurrentPage.PageIndex + 1);
-            }
+			PageLink targetPage = pageLink as PageLink;
+			if (targetPage.PageIndex >= 0 && targetPage.PageIndex < this.PageLinks.Count)
+			{
+				this.CurrentPageIndex = targetPage.PageIndex;
+			}
+			else
+			{
+				throw new InvalidOperationException();
+			}
         }
 
-        protected void NavigateToPage(object page)
+		protected virtual void NavigateToNextPage(object dummy)
         {
-            if (this.CanNavigateToPageAt(page))
-            {
-                this.CurrentPage = page as PageLink;
-            }
+			this.NavigateToPage(this.PageLinks[this.CurrentPageIndex + 1]);
         }
+
+		protected virtual void NavigateToLastPage(object dummy)
+		{
+			this.NavigateToPage(this.PageLinks[this.PageLinks.Count - 1]);
+		}
 
         /// <summary>
         /// Causes the page links and the visible page items to be recalculated.
         /// </summary>
-        protected void PerformPagesReflow(IEnumerable source)
+        protected void UpdatePageLinks(IEnumerable source)
         {
             if (source != null)
             {
-                int firstPageIndex = this.CurrentPage != null ? this.CurrentPage.PageIndex : 0;
+                int firstPageIndex = this.CurrentPageIndex != 0 ? this.CurrentPageIndex : 0;
                 IList<PageLink> newLinks = CalculatePageLinks(source, this.PageSize, firstPageIndex);
                 if (newLinks.Count == this.PageLinks.Count)
                 {
@@ -365,32 +772,31 @@ namespace Padstone.Xaml.Controls
                     }
                 }
 
-                this.CurrentPage = this.PageLinks.First(p => p.PageIndex == firstPageIndex);
+				this.NavigateToFirstPage(this.PageLinks[firstPageIndex]);
             }
         }
 
-        protected void UpdatePageItems()
+        protected void UpdateCurrentPageItems()
         {
             if (this.ItemsSource != null)
             {
-                PageLink currentPage = this.CurrentPage ?? new PageLink(0);
                 List<object> currentPageItems = this.ItemsSource
                     .Cast<object>()
-                    .Skip(this.PageSize * currentPage.PageIndex)
+					.Skip(this.PageSize * this.CurrentPageIndex)
                     .Take(this.PageSize).ToList();
-                if (currentPageItems.Count == this.PageItems.Count)
+                if (currentPageItems.Count == this.CurrentPageItems.Count)
                 {
                     for (int i = 0; i < currentPageItems.Count; i++)
                     {
-                        this.PageItems[i] = currentPageItems[i];
+                        this.CurrentPageItems[i] = currentPageItems[i];
                     }
                 }
                 else
                 {
-                    this.PageItems.Clear();
+                    this.CurrentPageItems.Clear();
                     foreach (object item in currentPageItems)
                     {
-                        this.PageItems.Add(item);
+                        this.CurrentPageItems.Add(item);
                     }
                 }
 
@@ -400,9 +806,16 @@ namespace Padstone.Xaml.Controls
 
         private void InvalidateCommands()
         {
-            this.NavigateToNextPageCommandInternal.InvalidateCanExecute();
-            this.NavigateToPageCommandInternal.InvalidateCanExecute();
+			this.NavigateToFirstPageCommandInternal.InvalidateCanExecute();
             this.NavigateToPreviousPageCommandInternal.InvalidateCanExecute();
+            this.NavigateToPageCommandInternal.InvalidateCanExecute();
+            this.NavigateToNextPageCommandInternal.InvalidateCanExecute();
+			this.NavigateToLastPageCommandInternal.InvalidateCanExecute();
         }
+
+		private void INotifyCollectionChangedEventHandler(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			this.OnItemsChanged(e);
+		}
     }
 }

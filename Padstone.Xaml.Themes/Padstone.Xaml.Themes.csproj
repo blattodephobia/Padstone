@@ -67,6 +67,12 @@
     </EmbeddedResource>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Padstone.Xaml\Padstone.Xaml.csproj">
+      <Project>{741c0dc4-aa69-4d4e-9a3b-ef98c9a3522d}</Project>
+      <Name>Padstone.Xaml</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

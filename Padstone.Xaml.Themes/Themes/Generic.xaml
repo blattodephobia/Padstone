@@ -1,4 +1,23 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-					xmlns:local="clr-namespace:Padstone.Xaml.Themes">
+					xmlns:padstone="https://github.com/blattodephobia/Padstone/xaml-2006">
+	<Style x:Key="DefaultDataPagerStyle"
+		   TargetType="padstone:DataPager">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="padstone:DataPager">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition />
+							<ColumnDefinition />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="padstone:DataPager"
+		   BasedOn="{StaticResource DefaultDataPagerStyle}" />
 </ResourceDictionary>

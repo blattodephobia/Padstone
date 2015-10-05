@@ -11,9 +11,5 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
-		<StackPanel>
-			<TextBlock Text="{Binding ScrollOffset, ElementName=ScrollZoomBar, StringFormat='Offset: {0}'}" />
-			<TextBlock Text="{Binding Zoom, ElementName=ScrollZoomBar, StringFormat='Zoom: {0}'}" />
-		</StackPanel>
 	</Grid>
 </Window>
