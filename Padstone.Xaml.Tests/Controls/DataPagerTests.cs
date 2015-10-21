@@ -263,7 +263,6 @@ namespace Padstone.Xaml.Tests.Controls
             }
 
             [TestMethod]
-			[ExpectedException(typeof(InvalidOperationException))]
             public void TestNavigateToPageCommandWithInvalidIndices()
             {
                 DataPager pager = new DataPager();
@@ -271,6 +270,7 @@ namespace Padstone.Xaml.Tests.Controls
                 pager.PageSize = 5;
 
                 pager.NavigateToPageCommand.Execute(new PageLink(10));
+				Assert.AreEqual(5, pager.CurrentPageIndex);
             }
 
             #endregion

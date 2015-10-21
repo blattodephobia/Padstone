@@ -14,9 +14,8 @@ namespace Padstone.Xaml
             if (expression is ConstantExpression) throw new InvalidOperationException("Constant member access expressions are not supported.");
 
             Expression result = expression;
-            while (
-                result.NodeType == ExpressionType.Convert ||
-                result.NodeType == ExpressionType.ConvertChecked)
+            while (result.NodeType == ExpressionType.Convert ||
+				   result.NodeType == ExpressionType.ConvertChecked)
             {
                 result = ((UnaryExpression)result).Operand;
             }

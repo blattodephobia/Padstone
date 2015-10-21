@@ -649,8 +649,7 @@ namespace Padstone.Xaml.Controls
                 this.CanNavigateToNextPage);
 
             this.NavigateToPageCommandInternal = new DelegateCommand(
-                this.NavigateToPage,
-                this.CanNavigateToPageAt);
+                this.NavigateToPage);
 
 			this.NavigateToFirstPageCommandInternal = new DelegateCommand(
 				this.NavigateToFirstPage,
@@ -661,23 +660,16 @@ namespace Padstone.Xaml.Controls
 				this.CanNavigateToLastPage);
         }
 
-        protected virtual bool CanNavigateToPageAt(object pageLink)
-        {
-            return this.PageLinks.Any(p => p.PageIndex == (pageLink as PageLink).PageIndex);
-        }
-
         protected virtual bool CanNavigateToNextPage()
         {
             return
-                this.CurrentPageIndex != null &&
-                this.PageLinks.Any() &&
+				this.PageLinks.Any() &&
                 this.CurrentPageIndex < this.PageLinks.Last().PageIndex;
         }
 
         protected virtual bool CanNavigateToPreviousPage()
         {
             return
-                this.CurrentPageIndex != null &&
                 this.PageLinks.Any() &&
                 this.CurrentPageIndex > this.PageLinks.First().PageIndex;
         }
@@ -727,9 +719,13 @@ namespace Padstone.Xaml.Controls
 		protected virtual void NavigateToPage(object pageLink)
         {
 			PageLink targetPage = pageLink as PageLink;
-			if (targetPage.PageIndex >= 0 && targetPage.PageIndex < this.PageLinks.Count)
+			if (targetPage != null && targetPage.PageIndex >= 0)
 			{
-				this.CurrentPageIndex = targetPage.PageIndex;
+				this.CurrentPageIndex = Math.Min(targetPage.PageIndex, this.PageLinks.Count - 1);
+			}
+			else if (pageLink is int)
+			{
+				this.CurrentPageIndex = Math.Min((int)(pageLink), this.PageLinks.Count - 1);
 			}
 			else
 			{
