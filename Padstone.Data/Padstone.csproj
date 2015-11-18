@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="CartesianTree.cs" />
     <Compile Include="CartesianTreeNode.cs" />
+    <Compile Include="IRangeExtremumQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
