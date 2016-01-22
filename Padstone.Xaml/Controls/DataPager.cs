@@ -321,7 +321,7 @@ namespace Padstone.Xaml.Controls
             int minIndex = 0;
             int maxIndex = (d as DataPager).PageLinks.Count - 1;
 
-            int result = currentValue != null && minIndex.CompareTo(currentValue) > 0 ? 0 : currentValue;
+            int result = minIndex.CompareTo(currentValue) > 0 ? 0 : currentValue;
             result = maxIndex.CompareTo(result) < 0 ? Math.Max(0, maxIndex) : result;
             return result;
         }

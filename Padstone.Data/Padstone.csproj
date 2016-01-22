@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bytes2you.Validation">
-      <HintPath>..\packages\Bytes2you.Validation.1.0.0.0\lib\net45\Bytes2you.Validation.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,7 +42,10 @@
   <ItemGroup>
     <Compile Include="Data\CartesianTree.cs" />
     <Compile Include="Data\CartesianTreeNode.cs" />
+    <Compile Include="Data\HeapBase.cs" />
     <Compile Include="Data\IRangeExtremumQuery.cs" />
+    <Compile Include="Data\MaxPriorityQueue.cs" />
+    <Compile Include="Data\MinPriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

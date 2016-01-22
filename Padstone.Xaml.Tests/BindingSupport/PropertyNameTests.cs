@@ -16,7 +16,7 @@ namespace Padstone.Xaml.Tests
 
             string TestProperty { get; set; }
 
-            string testField;
+            string testField = "";
 
             int TestValueTypeProperty { get; set; }
 
