@@ -43,9 +43,12 @@
     <Compile Include="Data\CartesianTree.cs" />
     <Compile Include="Data\CartesianTreeNode.cs" />
     <Compile Include="Data\HeapBase.cs" />
+    <Compile Include="Data\Internal\Helpers.cs" />
     <Compile Include="Data\IRangeExtremumQuery.cs" />
     <Compile Include="Data\MaxPriorityQueue.cs" />
     <Compile Include="Data\MinPriorityQueue.cs" />
+    <Compile Include="Data\Treap.cs" />
+    <Compile Include="Data\Internal\TreapNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

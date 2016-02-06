@@ -25,26 +25,23 @@ namespace Padstone.Data
 
         private List<T> internalList = new List<T>();
 
-        public HeapBase()
+        protected HeapBase()
         {
-            if (typeof(IComparable<T>).IsAssignableFrom(typeof(T)))
-            {
-                this.Comparer = (x, y) => ((IComparable<T>)x).CompareTo(y);
-            }
-            else
+            if (!typeof(IComparable<T>).IsAssignableFrom(typeof(T)))
             {
                 throw new InvalidOperationException($"The default constructor of this type expects that the generic type argument T implements {typeof(IComparable<>)}.");
             }
+            this.Comparer = (x, y) => ((IComparable<T>)x).CompareTo(y);
         }
 
-        public HeapBase(IComparer<T> comparer)
+        protected HeapBase(IComparer<T> comparer)
         {
             if (comparer == null) throw new ArgumentNullException(nameof(comparer));
 
             this.Comparer = (x, y) => comparer.Compare(x, y);
         }
 
-        public HeapBase(Func<T, T, int> comparison)
+        protected HeapBase(Func<T, T, int> comparison)
         {
             if (comparison == null) throw new ArgumentNullException(nameof(comparison));
 

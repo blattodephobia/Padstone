@@ -54,6 +54,7 @@
     <Compile Include="Data\CartesianTreeTests.cs" />
     <Compile Include="Data\MaxPriorityQueueTests.cs" />
     <Compile Include="Data\MinPriorityQueueTests.cs" />
+    <Compile Include="Data\TreapTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

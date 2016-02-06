@@ -2,8 +2,8 @@
 {
     public interface IRangeExtremumQuery<T>
 	{
-		T FindMinimum(int lowerInclusiveBound, int upperInclusiveBound);
+		bool TryGetMinimum(int lowerInclusiveBound, int upperInclusiveBound, out T result);
 
-		T FindMaximum(int lowerInclusiveBound, int upperInclusiveBound);
+		bool TryGetMaximum(int lowerInclusiveBound, int upperInclusiveBound, out T result);
 	}
 }
